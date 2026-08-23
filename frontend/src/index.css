@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --bg: #FBF9F7;
+  --surface: #FFFFFF;
+  --surface-alt: #F5F1ED;
+  --border: #E8E1DA;
+  --text: #1C1917;
+  --text-muted: #78716C;
+  --accent: #B4576B;
+  --accent-hover: #9C4459;
+  --accent-soft: #FDF2F4;
+}
+
+.dark {
+  --bg: #121014;
+  --surface: #1C1921;
+  --surface-alt: #272330;
+  --border: #363142;
+  --text: #F3F0F5;
+  --text-muted: #A39BA8;
+  --accent: #D9778F;
+  --accent-hover: #E895A8;
+  --accent-soft: #2D1A23;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  margin: 0;
+  transition: background-color 250ms ease, color 250ms ease;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Theme Utilities */
+.app-bg {
+  background-color: var(--bg);
+}
+
+.app-surface {
+  background-color: var(--surface);
+}
+
+.app-surface-alt {
+  background-color: var(--surface-alt);
+}
+
+.app-border {
+  border-color: var(--border);
+}
+
+.app-text {
+  color: var(--text);
+}
+
+.app-text-muted {
+  color: var(--text-muted);
+}
+
+.pill-chip {
+  background-color: var(--surface-alt);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  transition: all 200ms ease;
+}
+
+.pill-chip.active {
+  background-color: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
