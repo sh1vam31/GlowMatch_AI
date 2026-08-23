@@ -9,5 +9,5 @@ htmlcov/
 venv/
 .venv/
 qdrant_data/
-data/raw/
+data/
 eval/results/
