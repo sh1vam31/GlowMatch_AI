@@ -22,6 +22,12 @@ def rerank_cross_encoder(query: str, products: List[Product], top_k: int = 10) -
     if not products or not query.strip():
         return [(p, 0.0) for p in products[:top_k]]
 
+    # Skip heavy CPU inference on Render Free tier to prevent 60s gateway timeouts
+    import os
+    if os.getenv("RENDER"):
+        logger.info("Skipping CrossEncoder on Render Free tier; returning base BM25 ranking.")
+        return [(p, 1.0 - (i * 0.05)) for i, p in enumerate(products[:top_k])]
+
     try:
         model = get_reranker()
         pairs = [(query, p.text_for_embedding or p.name) for p in products]
