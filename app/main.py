@@ -24,11 +24,9 @@ async def lifespan(app: FastAPI):
     def _warmup():
         try:
             from app.retrieval.embedder import get_embedder
-            from app.retrieval.reranker import get_reranker
-            logger.info("Pre-warming AI models in background...")
+            logger.info("Pre-warming lightweight embedding model in background...")
             get_embedder()
-            get_reranker()
-            logger.info("AI models pre-warmed successfully!")
+            logger.info("Embedding model pre-warmed successfully!")
         except Exception as e:
             logger.warning(f"Model pre-warming deferred: {e}")
 
