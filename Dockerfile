@@ -17,11 +17,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt-get/lists/*
 
+# Force PIP to prioritize CPU-only wheels for PyTorch and related libraries
+ENV PIP_EXTRA_INDEX_URL=https://download.pytorch.org/whl/cpu
+
 COPY requirements.txt .
 
-# Install CPU-only PyTorch to save ~400MB RAM before installing other dependencies
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu && \
-    pip install --no-cache-dir -r requirements.txt
+# Install dependencies (will strictly use CPU-only PyTorch due to ENV above)
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 

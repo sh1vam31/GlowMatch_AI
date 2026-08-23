@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from sentence_transformers import CrossEncoder
+
 from app.config import settings
 from app.models.product import Product
 import logging
@@ -9,9 +9,10 @@ logger = logging.getLogger(__name__)
 _reranker_model = None
 
 
-def get_reranker() -> CrossEncoder:
+def get_reranker():
     global _reranker_model
     if _reranker_model is None:
+        from sentence_transformers import CrossEncoder
         logger.info(f"Loading CrossEncoder model '{settings.RERANKER_MODEL}'...")
         _reranker_model = CrossEncoder(settings.RERANKER_MODEL)
     return _reranker_model
