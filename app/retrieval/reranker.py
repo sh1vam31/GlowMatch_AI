@@ -21,10 +21,13 @@ def rerank_cross_encoder(query: str, products: List[Product], top_k: int = 10) -
     if not products or not query.strip():
         return [(p, 0.0) for p in products[:top_k]]
 
-    pairs = [(query, p.text_for_embedding or p.name) for p in products]
-    model = get_reranker()
-    scores = model.predict(pairs, batch_size=32)
-
-    scored_products = list(zip(products, [float(s) for s in scores]))
-    scored_products.sort(key=lambda x: x[1], reverse=True)
-    return scored_products[:top_k]
+    try:
+        model = get_reranker()
+        pairs = [(query, p.text_for_embedding or p.name) for p in products]
+        scores = model.predict(pairs, batch_size=16)
+        scored_products = list(zip(products, [float(s) for s in scores]))
+        scored_products.sort(key=lambda x: x[1], reverse=True)
+        return scored_products[:top_k]
+    except Exception as e:
+        logger.warning(f"CrossEncoder reranking skipped due to memory constraint: {e}")
+        return [(p, 1.0 - (i * 0.05)) for i, p in enumerate(products[:top_k])]
