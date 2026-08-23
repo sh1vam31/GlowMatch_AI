@@ -71,16 +71,6 @@ export default function Header({ activeTab, setActiveTab, theme, toggleTheme }) 
               <Sun class="w-4 h-4 text-amber-400" />
             )}
           </button>
-
-          <a
-            href="http://localhost:8000/docs"
-            target="_blank"
-            rel="noreferrer"
-            class="flex items-center space-x-1 text-xs font-semibold app-text-muted hover:text-[var(--accent)] border app-border px-3.5 py-1.5 rounded-full app-surface transition hover:shadow-sm"
-          >
-            <span>API Specs</span>
-            <ExternalLink class="w-3 h-3 ml-0.5 opacity-70" />
-          </a>
         </div>
       </div>
     </header>
