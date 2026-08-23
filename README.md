@@ -1,3 +1,13 @@
+---
+title: GlowMatch AI
+emoji: 🌟
+colorFrom: pink
+colorTo: purple
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # GlowMatch AI 🌟
 
 > **AI-Powered Skincare Product Discovery, Color Science Typology & Routine Builder Engine**
@@ -38,7 +48,7 @@ GlowMatch AI is a modern hybrid retrieval and computer vision application engine
 | **AI Models** | `BAAI/bge-small-en-v1.5` (Embeddings), `BAAI/bge-reranker-base` (Reranking) |
 | **LLM Provider** | Groq Compound API (`groq/compound`) for explanation generation |
 | **Database & Cache** | MongoDB Atlas (Product Catalog), In-Memory LRU Cache |
-| **Cloud & Container** | Docker, Google Cloud Run (GCP) |
+| **Cloud & Container** | Docker, Hugging Face Spaces / Google Cloud Run |
 
 ---
 
@@ -116,31 +126,27 @@ make dev
 
 ---
 
-## ☁️ Deployment on Render (Recommended & Free)
+## 🚀 Deployment on Hugging Face Spaces
 
-This repository includes a production `Dockerfile` optimized for **Render.com**.
+This repository includes a production `Dockerfile` pre-configured for **Hugging Face Spaces** (Port `7860`).
 
-### 1. Connect Repository
-1. Go to **[dashboard.render.com](https://dashboard.render.com)** and log in with your GitHub account.
-2. Click **New +** $\rightarrow$ **Web Service**.
-3. Select your repository: **`sh1vam31/GlowMatch_AI`**.
+### 1. Create Space on Hugging Face
+1. Go to **[huggingface.co/new-space](https://huggingface.co/new-space)**.
+2. Enter Space Name: `GlowMatch_AI`.
+3. Select SDK: **Docker** $\rightarrow$ **Blank**.
 
-### 2. Configure Service Settings
-* **Name:** `glowmatch-ai`
-* **Runtime:** `Docker` (Automatically detected from `Dockerfile`)
-* **Instance Type:** `Free`
+### 2. Set Environment Variables
+In your Hugging Face Space $\rightarrow$ **Settings** $\rightarrow$ **Variables and Secrets**:
+* `GROQ_API_KEY` = `gsk_...`
+* `GROQ_MODEL` = `groq/compound`
+* `MONGO_URI` = `mongodb+srv://...`
+* `MONGO_DB` = `glowmatch`
 
-### 3. Add Environment Variables
-In the Render Web Service configuration screen under **Environment Variables**, add:
-
-| Key | Value |
-| :--- | :--- |
-| `GROQ_API_KEY` | `gsk_...` |
-| `GROQ_MODEL` | `groq/compound` |
-| `MONGO_URI` | `mongodb+srv://...` |
-| `MONGO_DB` | `glowmatch` |
-
-Click **Deploy Web Service** to launch your live application!
+### 3. Push Code to Hugging Face
+```bash
+git remote add hf https://huggingface.co/spaces/YOUR_USERNAME/GlowMatch_AI
+git push hf main
+```
 
 ---
 
