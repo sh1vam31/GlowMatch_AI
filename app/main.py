@@ -21,16 +21,18 @@ async def lifespan(app: FastAPI):
     logger.info(f"GlowMatch AI backend started in {settings.ENV} mode.")
     logger.info(f"Cache status: {cache.metrics()}")
 
-    def _warmup():
-        try:
-            from app.retrieval.embedder import get_embedder
-            logger.info("Pre-warming lightweight embedding model in background...")
-            get_embedder()
-            logger.info("Embedding model pre-warmed successfully!")
-        except Exception as e:
-            logger.warning(f"Model pre-warming deferred: {e}")
+    # Defer heavy model loading on production memory-constrained containers
+    if not os.getenv("RENDER") and not os.getenv("PORT"):
+        def _warmup():
+            try:
+                from app.retrieval.embedder import get_embedder
+                logger.info("Pre-warming lightweight embedding model in background...")
+                get_embedder()
+                logger.info("Embedding model pre-warmed successfully!")
+            except Exception as e:
+                logger.warning(f"Model pre-warming deferred: {e}")
 
-    asyncio.get_event_loop().run_in_executor(None, _warmup)
+        asyncio.get_event_loop().run_in_executor(None, _warmup)
     yield
 
 app = FastAPI(
