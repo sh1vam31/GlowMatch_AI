@@ -93,6 +93,11 @@ async def run(ctx: QueryContext) -> List[Tuple[Product, float]]:
     query_text = ctx.to_retrieval_text()
     strategy = settings.RETRIEVAL_STRATEGY.lower()
 
+    # Skip heavy model downloading and inference on Render Free tier to avoid gateway timeouts
+    import os
+    if os.getenv("RENDER"):
+        strategy = "bm25"
+
     candidates = await fetch_filtered_products(ctx)
 
     if not candidates:
