@@ -41,7 +41,7 @@ GlowMatch AI is a modern hybrid retrieval and computer vision application engine
 | **AI Models** | `BAAI/bge-small-en-v1.5` (Embeddings), `BAAI/bge-reranker-base` (Reranking) |
 | **LLM Provider** | Groq Compound API (`groq/compound`) for explanation generation |
 | **Database & Cache** | MongoDB Atlas (Product Catalog), In-Memory LRU Cache |
-| **Cloud & Container** | Docker, Hugging Face Spaces / Google Cloud Run |
+| **Cloud & Container** | Docker, Render Cloud Services |
 
 ---
 
@@ -119,27 +119,26 @@ make dev
 
 ---
 
-## 🚀 Deployment on Hugging Face Spaces
+## 🚀 Deployment on Render
 
-This repository includes a production `Dockerfile` pre-configured for **Hugging Face Spaces** (Port `7860`).
+This repository includes a production `Dockerfile` pre-configured to run efficiently on **Render Web Services** (defaulting to Port `10000` with optimized CPU-only PyTorch and lazy module loading to fit Render's Free tier RAM limits).
 
-### 1. Create Space on Hugging Face
-1. Go to **[huggingface.co/new-space](https://huggingface.co/new-space)**.
-2. Enter Space Name: `GlowMatch_AI`.
-3. Select SDK: **Docker** $\rightarrow$ **Blank**.
+### 1. Create a Web Service on Render
+1. Go to **[dashboard.render.com](https://dashboard.render.com)**.
+2. Click **New +** $\rightarrow$ **Web Service**.
+3. Connect your GitHub repository (`GlowMatch_AI`).
+4. Select **Docker** as the Runtime environment.
 
 ### 2. Set Environment Variables
-In your Hugging Face Space $\rightarrow$ **Settings** $\rightarrow$ **Variables and Secrets**:
-* `GROQ_API_KEY` = `gsk_...`
+In your Render Web Service dashboard $\rightarrow$ **Environment** tab:
+* `GROQ_API_KEY` = `gsk_...` (Your Groq API key)
 * `GROQ_MODEL` = `groq/compound`
-* `MONGO_URI` = `mongodb+srv://...`
+* `MONGO_URI` = `mongodb+srv://...` (Your MongoDB Atlas connection URI)
 * `MONGO_DB` = `glowmatch`
+* `RENDER` = `true` (Enables lightweight CPU configurations to prevent OOM/timeouts)
 
-### 3. Push Code to Hugging Face
-```bash
-git remote add hf https://huggingface.co/spaces/YOUR_USERNAME/GlowMatch_AI
-git push hf main
-```
+### 3. Deploy
+Render will automatically build your Docker container, resolve the CPU-only PyTorch index to keep memory under 60 MB on startup, and serve it live!
 
 ---
 
