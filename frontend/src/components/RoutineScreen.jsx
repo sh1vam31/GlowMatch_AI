@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, AlertTriangle, Sun, Moon, Loader2, RefreshCw } from 'lucide-react';
+import { ShieldCheck, AlertTriangle, Sun, Moon, Loader2, RefreshCw, CheckCircle2, DollarSign } from 'lucide-react';
 
 export default function RoutineScreen() {
   const [skinType, setSkinType] = useState('dry');
@@ -80,8 +80,14 @@ export default function RoutineScreen() {
       sunscreenTask
     ]);
 
-    // Safety checks
+    // Calculate Dynamic Total Cost & Budget Utilization
+    const totalCost = cleanser.price + moisturizer.price + treatment.price + sunscreen.price;
+    const utilizationPct = Math.round((totalCost / budget) * 100);
+
+    // Dynamic Ingredient Safety & Skin Profile Conflict Engine
     const conflicts = [];
+
+    // 1. Pregnancy Safety Report
     if (pregnancySafe) {
       conflicts.push({
         severity: "INFO",
@@ -90,10 +96,45 @@ export default function RoutineScreen() {
       });
     }
 
+    // 2. Skin Type Specific Protocol Reports
+    if (skinType === "sensitive") {
+      conflicts.push({
+        severity: "PROTOCOL",
+        title: "Sensitive Skin Barrier Protocol",
+        message: "High-concentration synthetic fragrances and harsh physical exfoliants excluded to prevent erythema & barrier disruption."
+      });
+    } else if (skinType === "oily") {
+      conflicts.push({
+        severity: "PROTOCOL",
+        title: "Oily & Pore-Balance Protocol",
+        message: "Lightweight, non-comedogenic gel formulations selected to manage sebum production without clogging pores."
+      });
+    } else if (skinType === "dry") {
+      conflicts.push({
+        severity: "PROTOCOL",
+        title: "Dry Skin Lipid Restoration Protocol",
+        message: "Emollient-rich humectants (Hyaluronic Acid & Ceramides) selected to restore transepidermal moisture retention."
+      });
+    } else {
+      conflicts.push({
+        severity: "PROTOCOL",
+        title: "Combination Skin Balance Protocol",
+        message: "Dual-action hydrating products selected to control T-zone shine while maintaining cheek hydration."
+      });
+    }
+
+    // 3. Dynamic Budget Efficiency Report
+    conflicts.push({
+      severity: "OPTIMIZATION",
+      title: `Budget Utilization (${utilizationPct}%)`,
+      message: `Total 4-step routine cost is ₹${totalCost.toLocaleString('en-IN')}, utilizing ${utilizationPct}% of your max ₹${budget.toLocaleString('en-IN')} budget.`
+    });
+
+    // 4. Active Ingredient Separation Protocol
     conflicts.push({
       severity: "SEPARATE",
-      title: "PM Active Separation",
-      message: "Exfoliating acids (AHA/BHA) and retinoids should be applied on alternate nights to preserve moisture barrier balance."
+      title: "PM Active Separation Protocol",
+      message: `Exfoliating actives in ${treatment.name} are strictly confined to night (PM) use to preserve skin barrier equilibrium.`
     });
 
     setRoutine({
@@ -107,7 +148,9 @@ export default function RoutineScreen() {
         { slot: "Treatment", ...treatment },
         { slot: "Moisturizer", ...moisturizer }
       ],
-      conflicts
+      conflicts,
+      totalCost,
+      utilizationPct
     });
 
     setGenerating(false);
@@ -242,12 +285,17 @@ export default function RoutineScreen() {
 
           {/* Safety Conflict Panel */}
           <div class="app-surface border app-border rounded-2xl p-6 space-y-3 shadow-sm">
-            <h3 class="font-bold text-sm app-text flex items-center space-x-2">
-              <ShieldCheck class="w-4 h-4 text-[#15803D] dark:text-emerald-400" />
-              <span>Ingredient Safety Validation Report</span>
+            <h3 class="font-bold text-sm app-text flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <ShieldCheck class="w-4 h-4 text-[#15803D] dark:text-emerald-400" />
+                <span>Ingredient Safety Validation Report</span>
+              </div>
+              <span class="text-xs font-bold text-[var(--accent)] bg-[var(--accent-soft)] px-3 py-1 rounded-full border border-[var(--accent)]/30">
+                Total Routine Cost: ₹{routine.totalCost.toLocaleString('en-IN')}
+              </span>
             </h3>
 
-            <div class="space-y-2">
+            <div class="space-y-2 pt-1">
               {routine.conflicts.map((c, idx) => (
                 <div
                   key={idx}
