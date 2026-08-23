@@ -116,24 +116,31 @@ make dev
 
 ---
 
-## ☁️ Deployment on Google Cloud Platform (GCP)
+## ☁️ Deployment on Render (Recommended & Free)
 
-Deploy to **Google Cloud Run** using the provided `Dockerfile`:
+This repository includes a production `Dockerfile` optimized for **Render.com**.
 
-```bash
-# 1. Login to Google Cloud
-gcloud auth login
+### 1. Connect Repository
+1. Go to **[dashboard.render.com](https://dashboard.render.com)** and log in with your GitHub account.
+2. Click **New +** $\rightarrow$ **Web Service**.
+3. Select your repository: **`sh1vam31/GlowMatch_AI`**.
 
-# 2. Create project & set context
-gcloud projects create glowmatch-ai-app --name="GlowMatch AI"
-gcloud config set project glowmatch-ai-app
+### 2. Configure Service Settings
+* **Name:** `glowmatch-ai`
+* **Runtime:** `Docker` (Automatically detected from `Dockerfile`)
+* **Instance Type:** `Free`
 
-# 3. Deploy container directly to Cloud Run
-gcloud run deploy glowmatch-ai \
-  --source . \
-  --region asia-south1 \
-  --allow-unauthenticated
-```
+### 3. Add Environment Variables
+In the Render Web Service configuration screen under **Environment Variables**, add:
+
+| Key | Value |
+| :--- | :--- |
+| `GROQ_API_KEY` | `gsk_...` |
+| `GROQ_MODEL` | `groq/compound` |
+| `MONGO_URI` | `mongodb+srv://...` |
+| `MONGO_DB` | `glowmatch` |
+
+Click **Deploy Web Service** to launch your live application!
 
 ---
 
